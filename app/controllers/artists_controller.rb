@@ -21,7 +21,7 @@ class ArtistsController < ApplicationController
         songs = params["songs"].map{|a|
             song = Song.create(title: a["title"], preview: a["preview"], album_cover: a["album"]["cover"], artist_name: a["artist"]["name"], duration: a["duration"])
             album = Album.find_by(title: a["album"]["title"])
-            song.update(album_id: album.id)
+            song.update(album_id: album.id, album_name: album.title)
             song
         }
         
