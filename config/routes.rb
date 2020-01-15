@@ -5,4 +5,9 @@ Rails.application.routes.draw do
   get "/api/v1/artists", to: "artists#index", as: "artists"
   get "/api/v1/songs", to: "songs#index", as: "songs"
 
+  post '/api/v1/artists', to: "artists#create"
+  post '/api/v1/albums', to: "albums#create"
+  post '/api/v1/songs', to: "songs#create"
+
+
 end

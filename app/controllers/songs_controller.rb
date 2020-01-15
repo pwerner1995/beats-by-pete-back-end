@@ -5,4 +5,9 @@ class SongsController < ApplicationController
         render json: songs
     end
 
+    def create 
+        
+        # puts params
+    end
+
 end

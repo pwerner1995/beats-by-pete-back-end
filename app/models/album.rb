@@ -1,6 +1,8 @@
 class Album < ApplicationRecord
     belongs_to :artist
     has_many :songs
+    validates_uniqueness_of :title
+
     def self.test 
 
         
@@ -35,4 +37,6 @@ class Album < ApplicationRecord
             puts "Album Count: #{Album.all.count} | Song Count: #{Song.all.count} | Artist Count: #{Artist.all.count}"
             
         end
+
+    
 end
