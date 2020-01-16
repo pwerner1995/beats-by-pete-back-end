@@ -1,7 +1,7 @@
 class AlbumsController < ApplicationController
 
     def index
-        albums = Album.all
+        albums = Album.all.sort_by{|a| a.artist_name}
         render json: albums
     end
 

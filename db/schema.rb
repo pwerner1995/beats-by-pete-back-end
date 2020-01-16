@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_10_202536) do
+ActiveRecord::Schema.define(version: 2020_01_16_154913) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "album_reviews", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "album_id"
+    t.float "rating"
+    t.string "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "albums", force: :cascade do |t|
     t.string "title"
@@ -25,11 +34,21 @@ ActiveRecord::Schema.define(version: 2020_01_10_202536) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "artist_name"
+    t.integer "avg_rating"
   end
 
   create_table "artists", force: :cascade do |t|
     t.string "name"
     t.string "picture"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "song_reviews", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "song_id"
+    t.float "rating"
+    t.string "content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -44,6 +63,14 @@ ActiveRecord::Schema.define(version: 2020_01_10_202536) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "album_name"
+    t.integer "avg_rating"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "password"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

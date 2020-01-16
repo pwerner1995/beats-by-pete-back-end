@@ -1,7 +1,7 @@
 class ArtistsController < ApplicationController
 
     def index
-        artists = Artist.all
+        artists = Artist.all.sort_by{|a| a.name} 
         render json: artists
     end
 
@@ -25,9 +25,19 @@ class ArtistsController < ApplicationController
             song
         }
         
-        artists.uniq!{|a| a.name}
-        albums.uniq!{|a| a.title}
-        songs.uniq!{|s| s.title}
+        if(artists.count > 0)
+            artists = artists.uniq!{|a| a.name}
+            artists = artists.sort_by{|a| a.name} 
+        end
+        if(albums.count > 0)
+            albums = albums.uniq!{|a| a.title}
+            albums = albums.sort_by{|a| a.artist_name}
+        end
+        if(songs.count > 0)
+            songs = songs.uniq!{|s| s.title}
+            songs = songs.sort{|a,b| [ a.album_name, a.artist_name] <=> [b.album_name, b.artist_name]}
+            
+        end
         # artists = params["artists"].map{|a|
             
         #     Artist.find_or_create_by(name: a["name"], picture: a["picture"])

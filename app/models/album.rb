@@ -1,6 +1,7 @@
 class Album < ApplicationRecord
     belongs_to :artist
     has_many :songs
+    has_many :users, through: :album_reviews
     validates_uniqueness_of :title
 
     def self.test 
