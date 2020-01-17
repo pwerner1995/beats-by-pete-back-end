@@ -22,11 +22,11 @@ class Album < ApplicationRecord
         response = JSON.parse(response.body)
 
             if(!response.key?("error"))
-                artist = Artist.find_or_create_by(name: response["artist"]["name"], picture: response["artist"]["picture"])
+                artist = Artist.find_or_create_by(name: response["artist"]["name"], picture: response["artist"]["picture_medium"])
                 if(response["genres"]["data"].length > 0)
-                    album = Album.find_or_create_by(title: response["title"], cover: response["cover"], artist_id: artist.id, genre: response["genres"]["data"][0]["name"], nb_tracks: response["tracks"]["data"].count, label: response["label"])
+                    album = Album.find_or_create_by(title: response["title"], cover: response["cover_medium"], artist_id: artist.id, genre: response["genres"]["data"][0]["name"], nb_tracks: response["tracks"]["data"].count, label: response["label"])
                 else
-                    album = Album.find_or_create_by(title: response["title"], cover: response["cover"], artist_id: artist.id, genre: "N/A", nb_tracks: response["tracks"]["data"].count, label: response["label"])
+                    album = Album.find_or_create_by(title: response["title"], cover: response["cover_medium"], artist_id: artist.id, genre: "N/A", nb_tracks: response["tracks"]["data"].count, label: response["label"])
 
                 end
                 
