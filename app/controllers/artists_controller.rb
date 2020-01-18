@@ -53,7 +53,7 @@ class ArtistsController < ApplicationController
         # }
         # # artist = Artist.find_or_create_by(artist_params)
         # artists.uniq!
-        render json: {artists: artists, albums: albums, songs: songs}.as_json()
+        render json: {searchArtists: artists, searchAlbums: albums, searchSongs: songs, artists: Artist.all, albums: Album.all, songs: Song.all}.as_json()
         # puts params
     end
 
