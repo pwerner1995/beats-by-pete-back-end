@@ -2,6 +2,7 @@ class Album < ApplicationRecord
     belongs_to :artist
     has_many :songs
     has_many :users, through: :album_reviews
+    has_many :album_reviews
     validates_uniqueness_of :title
 
     def self.test 
@@ -37,6 +38,33 @@ class Album < ApplicationRecord
             end
             puts "Album Count: #{Album.all.count} | Song Count: #{Song.all.count} | Artist Count: #{Artist.all.count}"
             
+        end
+
+        def self.highest_rated
+            sorted = Album.all.sort{|a, b| a.avg_rating <=> b.avg_rating}.reverse
+            top12 = []
+            i = 0
+            while(i < 12)
+                top12.push(sorted[i])
+                i += 1
+            end
+            top12
+        end
+
+        def find_avg_rating
+            reviews = self.album_reviews
+            sum =0
+            reviews.each{|review|
+                sum+=review.rating
+            }
+            if(reviews.count > 0)
+                new_avg = sum/reviews.count
+            else
+                new_avg = 0.0
+
+            end
+            
+            self.update(avg_rating: new_avg)
         end
 
     

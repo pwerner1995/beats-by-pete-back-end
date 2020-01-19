@@ -2,7 +2,11 @@ class ArtistsController < ApplicationController
 
     def index
         artists = Artist.all.sort_by{|a| a.name} 
-        render json: artists
+        topRatedArtists = Artist.highest_rated
+        render json: {
+            artists: artists,
+            topRatedArtists: topRatedArtists
+        }
     end
 
     def create

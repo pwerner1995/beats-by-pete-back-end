@@ -2,7 +2,11 @@ class AlbumsController < ApplicationController
 
     def index
         albums = Album.all.sort_by{|a| a.artist_name}
-        render json: albums
+        topRatedAlbums = Album.highest_rated
+        render json: {
+            albums: albums,
+            topRatedAlbums: topRatedAlbums
+        }
     end
 
     def create 
