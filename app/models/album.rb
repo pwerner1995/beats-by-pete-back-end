@@ -41,7 +41,7 @@ class Album < ApplicationRecord
         end
 
         def self.highest_rated
-            sorted = Album.all.sort{|a, b| a.avg_rating <=> b.avg_rating}.reverse
+            sorted = Album.all.sort{|a, b| b.avg_rating.to_f <=> a.avg_rating.to_f}
             top12 = []
             i = 0
             while(i < 12)
@@ -64,7 +64,11 @@ class Album < ApplicationRecord
 
             end
             
-            self.update(avg_rating: new_avg)
+            self.update(avg_rating: new_avg.round(2))
+        end
+
+        def self.search(params)
+            self.where('title LIKE ? ', "%#{params["searchTerms"]["album"]}%")
         end
 
     
