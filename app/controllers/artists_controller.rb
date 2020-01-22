@@ -35,81 +35,90 @@ class ArtistsController < ApplicationController
             end
         }
 
-        artists = []
-        albums = []
-        songs = []
+        new_artists = []
+        new_albums = []
+        new_songs = []
         if(params["searchTerms"]["artist"] != "")
-            artists = Artist.search(params)
+            new_artists = Artist.search(params)
         end
 
         if(params["searchTerms"]["album"] != "")
-            albums = Album.search(params)
+            new_albums = Album.search(params)
         end
 
         if(params["searchTerms"]["song"] != "")
-            songs = Song.search(params)
+            new_songs = Song.search(params)
         end
 
-        if(artists.count < 1 && params["searchTerms"]["artist"] != "")
-            artists = Artist.all.filter{|a| a.name.upcase.include?(params["searchTerms"]["artist"].upcase)}
+        if(new_artists.count < 1 && params["searchTerms"]["artist"] != "")
+            new_artists = Artist.all.filter{|a| a.name.upcase.include?(params["searchTerms"]["artist"].upcase)}
         end
 
-        if(albums.count < 1 && params["searchTerms"]["album"] != "")
-            albums = Album.all.filter{|a| a.title.upcase.include?(params["searchTerms"]["album"].upcase)}
+        if(new_albums.count < 1 && params["searchTerms"]["album"] != "")
+            new_albums = Album.all.filter{|a| a.title.upcase.include?(params["searchTerms"]["album"].upcase)}
         end
 
-        if(songs.count < 1 && params["searchTerms"]["song"] != "")
-            songs = Song.all.filter{|a| a.title.upcase.include?(params["searchTerms"]["song"].upcase)}
+        if(new_songs.count < 1 && params["searchTerms"]["song"] != "")
+            new_songs = Song.all.filter{|a| a.title.upcase.include?(params["searchTerms"]["song"].upcase)}
         end
 
-        if(albums.count > 1 && params["searchTerms"]["artist"] == "")
-            albums.each{|album|
-                artists.push(album.artist)
+        if(new_albums.count > 1 && params["searchTerms"]["artist"] == "")
+            new_albums.each{|album|
+                new_artists.push(album.artist)
             }
         end
 
-        if(songs.count > 1 && (params["searchTerms"]["artist"] == "" || params["searchTerms"]["artist"] == ""))
-            songs.each{|song|
-                albums.push(song.album)
-                artists.push(song.album.artist)
+        if(new_songs.count > 1 && (params["searchTerms"]["artist"] == "" || params["searchTerms"]["artist"] == ""))
+            new_songs.each{|song|
+                new_albums.push(song.album)
+                new_artists.push(song.album.artist)
             }
         end
 
-        artists.each{|artist|
-            artist.albums.each{|album|
-                albums.push(album)
-            }
+        new_artists.each{|artist|
+            if(artist.albums)
+                artist.albums.each{|album|
+                    new_albums.push(album)
+                }
+            end
         }
 
-        albums.each{|album|
-            album.songs.each{|song|
-                songs.push(song)
-            }
+        new_albums.each{|album|
+            if(album.songs)
+                album.songs.each{|song|
+                    new_songs.push(song)
+                }
+            end
         }
 
-        if(artists.count > 0)
-            artists = artists.uniq{|a| a.name}
-            artists = artists.sort{|a,b| [b.name, b.avg_rating.to_f] <=> [a.name, a.avg_rating.to_f]} 
+        if(new_artists.count > 0)
+            new_artists = new_artists.uniq{|a| a.name}
+            new_artists = new_artists.sort{|a,b| [b.name, b.avg_rating.to_f] <=> [a.name, a.avg_rating.to_f]} 
         end
     
-        if(albums.count > 0)
-            albums = albums.uniq{|a| a.title}
-            albums = albums.sort{|a,b| [b.avg_rating.to_f, b.artist_name] <=> [a.avg_rating.to_f, a.artist_name]}
+        if(new_albums.count > 0)
+            new_albums = new_albums.uniq{|a| a.title}
+            new_albums = new_albums.sort{|a,b| [b.avg_rating.to_f, b.artist_name] <=> [a.avg_rating.to_f, a.artist_name]}
         end
-        if(songs.count > 0)
-            songs = songs.uniq{|s| s.title}
-            songs = songs.sort{|a,b| [ a.album_name, a.artist_name] <=> [b.album_name, b.artist_name]}
+        if(new_songs.count > 0)
+            new_songs = new_songs.uniq{|s| s.title}
+            new_songs = new_songs.sort{|a,b| [ b.album.avg_rating.to_f] <=> [a.album.avg_rating.to_f]}
             
         end
 
-        
         # artists = params["artists"].map{|a|
             
         #     Artist.find_or_create_by(name: a["name"], picture: a["picture"])
         # }
         # # artist = Artist.find_or_create_by(artist_params)
         # artists.uniq!
-        render json: {searchArtists: artists, searchAlbums: albums, searchSongs: songs, artists: Artist.all, albums: Album.all, songs: Song.all}.as_json()
+        render json: {
+            searchArtists: new_artists, 
+            searchAlbums: new_albums, 
+            searchSongs: new_songs,
+            artists: Artist.all, 
+            albums: Album.all, 
+            songs: Song.all}.as_json()
         # puts params
     end
 

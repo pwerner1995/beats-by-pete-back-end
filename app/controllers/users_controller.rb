@@ -18,7 +18,22 @@ class UsersController < ApplicationController
     end
 
     def create
-        byebug
+        user = User.find_by(username: params["userName"])
+        if(user)
+            error = "User already exists"
+            user = {}
+            users = User.all
+        elsif
+            user = User.create(username: params["userName"])
+            error = ""
+            users = User.all
+        end
+
+        render json: {
+            user: user,
+            users: users,
+            error: error
+        }
     end
 
 end
