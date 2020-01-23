@@ -43,15 +43,15 @@ class ArtistsController < ApplicationController
         new_albums = []
         new_songs = []
         if(params["searchTerms"]["artist"] != "")
-            new_artists = Artist.search(params)
+            new_artists = Artist.search(params).to_a
         end
 
         if(params["searchTerms"]["album"] != "")
-            new_albums = Album.search(params)
+            new_albums = Album.search(params).to_a
         end
 
         if(params["searchTerms"]["song"] != "")
-            new_songs = Song.search(params)
+            new_songs = Song.search(params).to_a
         end
 
         if(new_artists.count < 1 && params["searchTerms"]["artist"] != "")
