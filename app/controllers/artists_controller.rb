@@ -14,6 +14,8 @@ class ArtistsController < ApplicationController
             artist = Artist.find_by(name: a["artist"]["name"])
             if(!artist)
                 artist = Artist.find_or_create_by(name: a["artist"]["name"], picture: a["artist"]["picture_medium"], avg_rating: 0.0)
+            elsif(!artist.lg_picture)
+                artist.update(lg_picture: a["artist"]["picture_big"])
             end
         }
 
@@ -23,6 +25,8 @@ class ArtistsController < ApplicationController
                 album = Album.find_or_create_by(title: a["album"]["title"], cover: a["album"]["cover_medium"], artist_name: a["artist"]["name"], avg_rating: 0.0)
                 artist = Artist.find_by(name: a["artist"]["name"])
                 album.update(artist_id: artist.id)
+            elsif(!album.lg_cover)
+                album.update(lg_cover: a["album"]["cover_big"])
             end
         }
 
